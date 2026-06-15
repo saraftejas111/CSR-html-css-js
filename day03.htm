@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <link rel="stylesheet" href="day03.css" />
+  </head>
+  <body>
+    hiiiiiiiiii... <br /><br /><br />
+
+    <center>
+      <form >
+        Email:
+        <input type="email" id="em" required />
+       
+        <br /><br />
+        pass :
+        <input type="password" required /> <br /><br />
+
+        <button type="submit"  onclick="check()">Login</button>
+        <button type="reset">Reset</button>
+      </form>
+    </center>
+
+    <h1 align="center">h1</h1>
+    <h2>h2</h2>
+    <h3>h3</h3>
+    <h4>h4</h4>
+    <h5>h5</h5>
+    <h6>h6</h6>
+    <h7>h7</h7>
+    <h8>h8</h8>
+
+    <script>
+      function check() {
+        let em = document.getElementById("em").value
+
+        const emailRegex =
+          /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(em);
+
+        if (emailRegex) {
+          console.log("email correct");
+          window.open('login.htm')
+        } else {
+            window.alert('incorrect email')
+          console.log("incorrect email");
+        }
+      }
+    </script>
+  </body>
+</html>
