@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated Login Form</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #101114;
+      --panel: rgba(255, 255, 255, 0.92);
+      --text: #17181c;
+      --muted: #6b7280;
+      --border: #d8dde8;
+      --primary: #2358ff;
+      --primary-dark: #123bc4;
+      --accent: #00a886;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --success: #15803d;
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.28);
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(0, 168, 134, 0.42), transparent 32%),
+        radial-gradient(circle at 88% 8%, rgba(35, 88, 255, 0.48), transparent 34%),
+        linear-gradient(135deg, #11141b 0%, #252937 55%, #151821 100%);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      overflow-x: hidden;
+    }
+
+    .background-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.22) 1px, transparent 1px);
+      background-size: 56px 56px;
+      animation: moveGrid 18s linear infinite;
+    }
+
+    @keyframes moveGrid {
+      from {
+        transform: translate3d(0, 0, 0);
+      }
+
+      to {
+        transform: translate3d(56px, 56px, 0);
+      }
+    }
+
+    .login-shell {
+      width: min(100%, 460px);
+      position: relative;
+      animation: formEntrance 700ms ease both;
+    }
+
+    @keyframes formEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .form-card {
+      width: 100%;
+      padding: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent), var(--primary), #ff7a45);
+    }
+
+    .brand-mark {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 23px;
+      font-weight: 800;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 34px rgba(35, 88, 255, 0.3);
+    }
+
+    h1 {
+      font-size: 30px;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 26px;
+      font-size: 15px;
+    }
+
+    .alert {
+      display: none;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      font-size: 14px;
+      line-height: 1.45;
+      border: 1px solid transparent;
+    }
+
+    .alert.show {
+      display: block;
+      animation: shake 360ms ease;
+    }
+
+    .alert.error {
+      color: #991b1b;
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+
+    .alert.success {
+      color: #14532d;
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+
+    @keyframes shake {
+      0%, 100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-6px);
+      }
+
+      75% {
+        transform: translateX(6px);
+      }
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    label,
+    .group-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #242732;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input,
+    select {
+      width: 100%;
+      height: 48px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 14px;
+      color: var(--text);
+      background: #ffffff;
+      font: inherit;
+      outline: none;
+      transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+    }
+
+    select {
+      cursor: pointer;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(35, 88, 255, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 34px;
+      min-width: 58px;
+      border: 0;
+      border-radius: 8px;
+      color: var(--primary);
+      background: rgba(35, 88, 255, 0.1);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .has-toggle {
+      padding-right: 78px;
+    }
+
+    .error-message {
+      min-height: 18px;
+      color: var(--danger);
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .field.invalid input,
+    .field.invalid select {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+    }
+
+    .field.valid input,
+    .field.valid select {
+      border-color: var(--success);
+    }
+
+    .radio-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .radio-card {
+      min-height: 48px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0 12px;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+    }
+
+    .radio-card:hover {
+      transform: translateY(-1px);
+      border-color: var(--primary);
+    }
+
+    .radio-card input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+
+    .radio-card:has(input:checked) {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(35, 88, 255, 0.12);
+    }
+
+    .password-meter {
+      width: 100%;
+      height: 7px;
+      margin-top: 10px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .password-meter span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--danger);
+      transition: width 220ms ease, background 220ms ease;
+    }
+
+    .password-help {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 6px;
+      line-height: 1.35;
+    }
+
+    .actions {
+      display: grid;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .submit-btn {
+      height: 50px;
+      border: 0;
+      border-radius: 8px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 15px 30px rgba(35, 88, 255, 0.3);
+      transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 38px rgba(35, 88, 255, 0.36);
+      filter: saturate(1.08);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .reset-btn {
+      height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: #374151;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: rgba(255, 255, 255, 0.82);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 16px;
+      }
+
+      .form-card {
+        padding: 26px 20px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      .radio-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background-grid"></div>
+
+  <main class="login-shell">
+    <section class="form-card" aria-labelledby="formTitle">
+      <div class="brand-mark" aria-hidden="true">L</div>
+      <h1 id="formTitle">Login Form</h1>
+      <p class="subtitle">Enter your details carefully. Login unlocks only when every field is complete and valid.</p>
+
+      <div class="alert error" id="errorAlert" role="alert"></div>
+      <div class="alert success" id="successAlert" role="status"></div>
+
+      <form id="loginForm" novalidate>
+        <div class="field" data-field="Email">
+          <div class="field-row">
+            <label for="email">Email</label>
+          </div>
+          <div class="input-wrap">
+            <input id="email" name="email" type="email" placeholder="example@mail.com" autocomplete="email">
+          </div>
+          <p class="error-message" id="emailError"></p>
+        </div>
+
+        <div class="field" data-field="Password">
+          <div class="field-row">
+            <label for="password">Password</label>
+          </div>
+          <div class="input-wrap">
+            <input class="has-toggle" id="password" name="password" type="password" placeholder="Minimum 8 characters" autocomplete="current-password">
+            <button class="toggle-password" type="button" id="togglePassword" aria-label="Show password">Show</button>
+          </div>
+          <div class="password-meter" aria-hidden="true">
+            <span id="passwordMeter"></span>
+          </div>
+          <p class="password-help" id="passwordHelp">Use uppercase, lowercase, number, and special character.</p>
+          <p class="error-message" id="passwordError"></p>
+        </div>
+
+        <div class="field" data-field="Mobile Number">
+          <div class="field-row">
+            <label for="mobile">Mobile Number</label>
+          </div>
+          <div class="input-wrap">
+            <input id="mobile" name="mobile" type="tel" placeholder="10 digit mobile number" maxlength="10" inputmode="numeric" autocomplete="tel">
+          </div>
+          <p class="error-message" id="mobileError"></p>
+        </div>
+
+        <div class="field" data-field="Gender">
+          <p class="group-label" id="genderLabel">Gender</p>
+          <div class="radio-grid" role="radiogroup" aria-labelledby="genderLabel">
+            <label class="radio-card">
+              <input type="radio" name="gender" value="Male">
+              Male
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="gender" value="Female">
+              Female
+            </label>
+          </div>
+          <p class="error-message" id="genderError"></p>
+        </div>
+
+        <div class="field" data-field="City">
+          <div class="field-row">
+            <label for="city">City</label>
+          </div>
+          <select id="city" name="city">
+            <option value="">Select your city</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Kolkata">Kolkata</option>
+            <option value="Pune">Pune</option>
+          </select>
+          <p class="error-message" id="cityError"></p>
+        </div>
+
+        <div class="actions">
+          <button class="submit-btn" type="submit">Login Securely</button>
+          <button class="reset-btn" type="reset">Clear Form</button>
+        </div>
+      </form>
+    </section>
+
+    <p class="footer-note">Mobile rule: starts with 6, 7, 8, or 9 and contains exactly 10 digits.</p>
+  </main>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const errorAlert = document.getElementById("errorAlert");
+    const successAlert = document.getElementById("successAlert");
+    const password = document.getElementById("password");
+    const mobile = document.getElementById("mobile");
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordMeter = document.getElementById("passwordMeter");
+    const passwordHelp = document.getElementById("passwordHelp");
+
+    const fields = {
+      email: document.getElementById("email"),
+      password,
+      mobile,
+      gender: document.querySelectorAll('input[name="gender"]'),
+      city: document.getElementById("city")
+    };
+
+    function setFieldState(fieldName, message) {
+      const field = document.querySelector(`[data-field="${fieldName}"]`);
+      const error = document.getElementById(`${fieldName.toLowerCase().replace(" number", "").replace(" ", "")}Error`);
+
+      field.classList.toggle("invalid", Boolean(message));
+      field.classList.toggle("valid", !message);
+
+      if (error) {
+        error.textContent = message || "";
+      }
+    }
+
+    function getSelectedGender() {
+      return document.querySelector('input[name="gender"]:checked');
+    }
+
+    function passwordScore(value) {
+      let score = 0;
+
+      if (value.length >= 8) score++;
+      if (/[a-z]/.test(value)) score++;
+      if (/[A-Z]/.test(value)) score++;
+      if (/\d/.test(value)) score++;
+      if (/[^A-Za-z0-9]/.test(value)) score++;
+
+      return score;
+    }
+
+    function updatePasswordMeter() {
+      const score = passwordScore(password.value);
+      const percent = Math.min(score * 20, 100);
+      const colors = ["#dc2626", "#dc2626", "#d97706", "#d97706", "#15803d", "#15803d"];
+      const labels = ["Password strength", "Very weak", "Weak", "Medium", "Strong", "Excellent"];
+
+      passwordMeter.style.width = `${percent}%`;
+      passwordMeter.style.background = colors[score];
+      passwordHelp.textContent = labels[score];
+    }
+
+    function validateForm(showErrors = true) {
+      const invalidFields = [];
+      const emailValue = fields.email.value.trim();
+      const passwordValue = fields.password.value;
+      const mobileValue = fields.mobile.value.trim();
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      const mobilePattern = /^[6-9]\d{9}$/;
+      const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+      const validations = [
+        {
+          name: "Email",
+          valid: emailPattern.test(emailValue),
+          message: emailValue ? "Email is incorrect." : "Email is required."
+        },
+        {
+          name: "Password",
+          valid: strongPasswordPattern.test(passwordValue),
+          message: passwordValue ? "Password is incorrect." : "Password is required."
+        },
+        {
+          name: "Mobile Number",
+          valid: mobilePattern.test(mobileValue),
+          message: mobileValue ? "Mobile Number is incorrect." : "Mobile Number is required."
+        },
+        {
+          name: "Gender",
+          valid: Boolean(getSelectedGender()),
+          message: "Gender is required."
+        },
+        {
+          name: "City",
+          valid: Boolean(fields.city.value),
+          message: "City is required."
+        }
+      ];
+
+      validations.forEach((item) => {
+        if (!item.valid) {
+          invalidFields.push(item.name);
+        }
+
+        if (showErrors) {
+          setFieldState(item.name, item.valid ? "" : item.message);
+        }
+      });
+
+      return invalidFields;
+    }
+
+    function showAlert(type, message) {
+      const activeAlert = type === "success" ? successAlert : errorAlert;
+      const hiddenAlert = type === "success" ? errorAlert : successAlert;
+
+      hiddenAlert.classList.remove("show");
+      hiddenAlert.textContent = "";
+      activeAlert.textContent = message;
+      activeAlert.classList.add("show");
+    }
+
+    fields.email.addEventListener("input", () => validateForm(true));
+    fields.city.addEventListener("change", () => validateForm(true));
+    password.addEventListener("input", () => {
+      updatePasswordMeter();
+      validateForm(true);
+    });
+
+    fields.gender.forEach((radio) => {
+      radio.addEventListener("change", () => validateForm(true));
+    });
+
+    mobile.addEventListener("input", () => {
+      mobile.value = mobile.value.replace(/\D/g, "").slice(0, 10);
+      validateForm(true);
+    });
+
+    togglePassword.addEventListener("click", () => {
+      const isHidden = password.type === "password";
+
+      password.type = isHidden ? "text" : "password";
+      togglePassword.textContent = isHidden ? "Hide" : "Show";
+      togglePassword.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const invalidFields = validateForm(true);
+
+      if (invalidFields.length > 0) {
+        showAlert("error", `Cannot login. Incorrect field(s): ${invalidFields.join(", ")}.`);
+        const firstInvalid = document.querySelector(".field.invalid input, .field.invalid select");
+
+        if (firstInvalid) {
+          firstInvalid.focus();
+        }
+
+        return;
+      }
+
+      showAlert("success", "Login successful. All fields are valid.");
+      form.classList.add("submitted");
+    });
+
+    form.addEventListener("reset", () => {
+      setTimeout(() => {
+        document.querySelectorAll(".field").forEach((field) => {
+          field.classList.remove("valid", "invalid");
+        });
+        document.querySelectorAll(".error-message").forEach((error) => {
+          error.textContent = "";
+        });
+        errorAlert.classList.remove("show");
+        successAlert.classList.remove("show");
+        errorAlert.textContent = "";
+        successAlert.textContent = "";
+        updatePasswordMeter();
+      }, 0);
+    });
+
+    updatePasswordMeter();
+  </script>
+</body>
+</html>

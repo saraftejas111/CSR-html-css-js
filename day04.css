@@ -1,0 +1,23 @@
+h1 {
+  text-align: center;
+  background-color: yellow;
+}
+
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  margin: 50px;
+  padding: 20px;
+}
+
+/* 
+---- margin - padding rule ------
+
+1 value   ------                  all sides
+1 value , 2 value   -----         top-bottom  ,   right-left
+1 value , 2 value , 3 value  -----  top ,   right-left , bottom
+1 value , 2 value , 3 value , 4 value  -----  top  , right, bottom,  left
+
+*/
