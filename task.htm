@@ -1,0 +1,27 @@
+<center>
+  num1 = <input type="text" id="n1"/> <br />
+  <br />
+
+  num2 = <input type="text" id="n2"/> <br />
+  <br />
+
+  <input type="button" value="Multiply" onclick="multi()"/> <br />
+  <br />
+
+  result : <input type="text" id="res"/>
+</center>
+
+<script>
+
+function multi(){
+
+   let n =  document.getElementById("n1").value
+    
+   let m =   document.getElementById("n2").value
+
+   let result = n * m 
+
+   document.getElementById('res').value = result ; 
+}
+
+</script>
